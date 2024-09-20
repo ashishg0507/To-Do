@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do Manager</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Dark_Sunset_%28140319545%29.jpeg/1200px-Dark_Sunset_%28140319545%29.jpeg') no-repeat center center/cover;
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 600px;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+            font-size: 30px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: transparent;
+            border: 1px solid #ccc;
+            color: #333;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        button:hover {
+            background-color: #d8591a;
+            color: white;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        td button {
+            background-color: transparent;
+            padding: 5px;
+            border: 1px solid #ccc;
+            color: #333;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        td button:hover {
+            background-color: #007bff;
+            color: white;
+        }
+        td button.delete:hover {
+            background-color: #dc3545;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>To-Do List</h2>
+    <input type="text" id="taskInput" placeholder="Add a new task...">
+    <button onclick="addTask()">Create Task</button>
+
+    <table>
+        <thead>
+            <tr>
+                <th>S No.</th>
+                <th>Task</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="taskTableBody">
+            <!-- Tasks will appear here -->
+        </tbody>
+    </table>
+</div>
+
+<script>
+    let taskCount = 0;
+
+    function addTask() {
+        const taskInput = document.getElementById('taskInput');
+        const taskText = taskInput.value.trim();
+
+        if (taskText === "") {
+            alert("Please enter a task.");
+            return;
+        }
+
+        taskCount++;
+        const taskTableBody = document.getElementById('taskTableBody');
+
+        // Create new row for task
+        const row = document.createElement('tr');
+
+        // Create Number cell
+        const numberCell = document.createElement('td');
+        numberCell.textContent = taskCount;
+        row.appendChild(numberCell);
+
+        // Create Task cell
+        const taskCell = document.createElement('td');
+        taskCell.textContent = taskText;
+        row.appendChild(taskCell);
+
+        // Create Action cell with Edit and Delete buttons
+        const actionCell = document.createElement('td');
+
+        const editButton = document.createElement('button');
+        editButton.textContent = 'Edit';
+        editButton.onclick = () => editTask(row, taskCell);
+        actionCell.appendChild(editButton);
+
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Delete';
+        deleteButton.className = 'delete';
+        deleteButton.onclick = () => deleteTask(row);
+        actionCell.appendChild(deleteButton);
+
+        row.appendChild(actionCell);
+
+        taskTableBody.appendChild(row);
+
+        taskInput.value = "";
+    }
+
+    function deleteTask(row) {
+        row.remove();
+        taskCount--;
+        updateTaskNumbers();
+    }
+
+    function editTask(row, taskCell) {
+        const newTask = prompt("Edit task:", taskCell.textContent);
+        if (newTask !== null && newTask.trim() !== "") {
+            taskCell.textContent = newTask.trim();
+        }
+    }
+
+    function updateTaskNumbers() {
+        const taskRows = document.querySelectorAll('#taskTableBody tr');
+        taskRows.forEach((row, index) => {
+            row.firstElementChild.textContent = index + 1;
+        });
+    }
+</script>
+
+</body>
+</html>
